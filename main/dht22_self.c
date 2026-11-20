@@ -12,9 +12,11 @@
 
 #define DHT_GPIO GPIO_NUM_4
 static const char *TAG = "dht22";
-// DATA: 8-bit integral RH, 8-bit decimal RH,
-// 8 bit integral T, 8 bit decimal T, 8 bit checksum
-// 40 bit in total.
+
+// DATA: 40 bits = 16-bit humidity + 16-bit temperature + 8-bit checksum.
+// Both values are sent in tenths (e.g. 652 = 65.2 %RH).
+// The top bit of the temperature is a sign bit.
+// Checksum equals low 8 bits of the sum of the first four bytes.
 
 static esp_err_t wait_level_change(int64_t timeout_us, int curr_level, uint32_t* out_duration) {
   int64_t init_val = esp_timer_get_time();
